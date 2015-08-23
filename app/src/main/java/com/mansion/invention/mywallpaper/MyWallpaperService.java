@@ -5,11 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.Shader;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.service.wallpaper.WallpaperService;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -41,10 +49,17 @@ public class MyWallpaperService extends WallpaperService {
         private final Handler handler; // = new Handler();
         private Paint paint = new Paint();
         private boolean visible = true;
-        private boolean changeColor = false;
         private boolean touchEnabled;
-        private int width;
+        private int width, base;
         int height;
+        private int[] currentColor1;
+        private int[] currentColor2;
+        private int[] targetColor1;
+        private int[] targetColor2;
+
+        private int currentRed, currentGreen, currentBlue, targetRed, targetGreen, targetBlue;
+        private boolean reverse;
+        private int repeatedApply;
 
         private final Runnable drawRunner = new Runnable() {
             @Override
@@ -55,13 +70,18 @@ public class MyWallpaperService extends WallpaperService {
 
         public MyWallpaperEngine() {
             handler = new Handler();
-//            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyWallpaperService.this);
-
-//            touchEnabled = prefs.getBoolean("touch", true);
             paint.setAntiAlias(true);
             paint.setColor(myColor);
             paint.setStyle(Paint.Style.STROKE);
-//            changeColor = true;
+            currentRed = 255;
+            currentGreen = 182;
+            currentBlue = 193;
+            targetRed = 255;
+            targetGreen = 182;
+            targetBlue = 193;
+
+            reverse = false;
+            base = -1;
             handler.post(drawRunner);
         }
 
@@ -104,14 +124,16 @@ public class MyWallpaperService extends WallpaperService {
             super.onSurfaceChanged(holder, format, width, height);
         }
 
+        /*
+           * Current color.
+           */
+        private int getCurrentColor() {
+            return Color.argb(60, currentRed, currentGreen, currentBlue);
+        }
 
-        @Override
-        public void onTouchEvent(MotionEvent event) {
-            if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-                changeColor = true;
-                draw();
-            }
-            super.onTouchEvent(event);
+
+        public void setCurrentColor() {
+
         }
 
 
@@ -122,20 +144,81 @@ public class MyWallpaperService extends WallpaperService {
             try {
                 canvas = holder.lockCanvas();
                 if (canvas != null) {
-                    if (myColor == Color.WHITE) myColor = Color.BLUE;
-                    else myColor = Color.WHITE;
-                    canvas.drawColor(myColor);
+                    canvas.drawColor(0xFFF3F3F3);
+                    setCurrentColor();
+                    int[] colors = {base, getCurrentColor()};
+                    GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+
+//                    Log.d("opacity", String.valueOf(canvas.getMatrix()));
+                    grad.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//                    grad.setTintMode(PorterDuff.Mode.DARKEN);
+//                    grad.setColorFilter(0x63478C, PorterDuff.Mode.XOR);
+                    grad.draw(canvas);
+//                    updateCurrentColor();
+
                 }
-            }finally {
+            } finally {
                 if (canvas != null)
                     holder.unlockCanvasAndPost(canvas);
             }
 
-            if (!changeColor) {
-                handler.removeCallbacks(drawRunner);
-                handler.postDelayed(drawRunner, 5000);
-            }
-            if (changeColor) changeColor = false;
+            handler.removeCallbacks(drawRunner);
+            handler.postDelayed(drawRunner, 500);
         }
+
+
+        public void night() {
+            //base = //-16776961;
+            targetRed = 42;
+            targetGreen = 86;
+            targetBlue = 152;
+        }
+
+        public void noon() {
+            base = -1;
+            targetRed = 255;
+            targetGreen = 182;
+            targetBlue = 153;
+        }
+
+        public void evening() {
+
+            targetRed=192;
+            targetGreen= 158;
+            targetBlue = 205;
+        }
+
+        /*
+           * Update current color.
+           */
+        private void updateCurrentColor() {
+
+            if (repeatedApply < 30) {
+                repeatedApply++;
+            } else {
+                night();
+                if (currentRed != targetRed) currentRed = calibrateColor(currentRed, targetRed);
+                if (currentBlue != targetBlue) currentBlue = calibrateColor(currentBlue, targetBlue);
+                if (currentGreen != targetGreen) currentGreen = calibrateColor(currentGreen, targetGreen);
+
+            }
+        }
+
+        public int calibrateColor(int currentColor, int targetColor) {
+            int increment = 5;
+
+            if (currentColor < targetColor) {
+                if (currentColor + 5 > targetColor) currentColor = targetColor;
+                else currentColor += increment;
+            }else {
+                if (currentColor - 5 < targetColor) currentColor = targetColor;
+                else currentColor -= increment;
+            }
+
+            return currentColor;
+        }
+
     }
+
+
 }
