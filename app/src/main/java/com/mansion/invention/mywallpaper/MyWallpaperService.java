@@ -22,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import java.util.Calendar;
+
 public class MyWallpaperService extends WallpaperService {
     public int myColor = Color.WHITE;
 
@@ -50,16 +52,17 @@ public class MyWallpaperService extends WallpaperService {
         private Paint paint = new Paint();
         private boolean visible = true;
         private boolean touchEnabled;
-        private int width, base;
+        private int width, top,base, myAlpha;
         int height;
         private int[] currentColor1;
         private int[] currentColor2;
-        private int[] targetColor1;
-        private int[] targetColor2;
+//        private int[] targetColor1;
+//        private int[] targetColor2;
 
         private int currentRed, currentGreen, currentBlue, targetRed, targetGreen, targetBlue;
         private boolean reverse;
         private int repeatedApply;
+        private int testCounter;
 
         private final Runnable drawRunner = new Runnable() {
             @Override
@@ -73,15 +76,8 @@ public class MyWallpaperService extends WallpaperService {
             paint.setAntiAlias(true);
             paint.setColor(myColor);
             paint.setStyle(Paint.Style.STROKE);
-            currentRed = 255;
-            currentGreen = 182;
-            currentBlue = 193;
-            targetRed = 255;
-            targetGreen = 182;
-            targetBlue = 193;
-
             reverse = false;
-            base = -1;
+            setCurrentColor();
             handler.post(drawRunner);
         }
 
@@ -133,9 +129,63 @@ public class MyWallpaperService extends WallpaperService {
 
 
         public void setCurrentColor() {
+            Calendar c = Calendar.getInstance();
+            int hourOfDay = Calendar.HOUR_OF_DAY;
 
+            nightMidnight(c);
+            /*if (hourOfDay < 6) midnightDawn(c);
+            else if (hourOfDay < 9) dawnMorning(c);
+            else if (hourOfDay < 12) morningNoon(c)
+            else if (hourOfDay < 15) noonEvening(c);
+            else if (hourOfDay < 18) eveningNight(c);
+            else if (hourOfDay <= 23) nightMidnight(c);
+       */ }
+
+
+        public void midnightDawn(Calendar c) {
+            //target purple to dark blue
+            int hourOfDay = 5;//c.HOUR_OF_DAY;
+            int minOfDay = 30; //c.MINUTE;
+            int tt = 360;
+            int ct = hourOfDay*60 + minOfDay;
+            int targetTop = Color.argb(100, 139,96, 139);
+            int targetBase = Color.argb(100, 62, 68, 125);
+            top = targetTop;
+            base = targetBase;
+            myAlpha = 0;
         }
 
+
+        public void dawnMorning(Calendar c) {
+            top = Color.argb(100, 222, 136, 165);
+            base = Color.argb(100, 101,89, 137);
+            myAlpha = 255;
+            // target pink to purple
+        }
+
+        public void morningNoon(Calendar c) {
+            top = Color.argb(100,255, 206, 187);
+            base = Color.argb(100, 238, 111, 178);
+            myAlpha = 255;
+            //target white to pink
+        }
+
+        public void noonEvening(Calendar c) {
+            dawnMorning(c);
+            //target pink to purple
+        }
+
+        public void eveningNight(Calendar c) {
+            midnightDawn(c);
+            //target purple to darkblue.
+        }
+
+        public void nightMidnight(Calendar c) {
+            top = Color.argb(60, 83, 93, 176);
+            base = Color.argb(60, 83, 93, 176);
+            myAlpha = 20;
+            //target dark blue to darkblue.
+        }
 
         private void draw() {
             SurfaceHolder holder = getSurfaceHolder();
@@ -144,15 +194,17 @@ public class MyWallpaperService extends WallpaperService {
             try {
                 canvas = holder.lockCanvas();
                 if (canvas != null) {
-                    canvas.drawColor(0xFFF3F3F3);
+
                     setCurrentColor();
-                    int[] colors = {base, getCurrentColor()};
-                    GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+                    int[] colors = {top, base};
+//                    canvas.drawColor(17170447, PorterDuff.Mode.OVERLAY);
+                    canvas.drawColor(Color.argb(myAlpha, 255, 255, 255));
+                 GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
 
 //                    Log.d("opacity", String.valueOf(canvas.getMatrix()));
                     grad.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-//                    grad.setTintMode(PorterDuff.Mode.DARKEN);
-//                    grad.setColorFilter(0x63478C, PorterDuff.Mode.XOR);
+                   // grad.setTintMode(PorterDuff.Mode.LIGHTEN);
+//                    grad.setColorFilter(Color.argb(100, 252,243,234), PorterDuff.Mode.OVERLAY);
                     grad.draw(canvas);
 //                    updateCurrentColor();
 
@@ -163,10 +215,11 @@ public class MyWallpaperService extends WallpaperService {
             }
 
             handler.removeCallbacks(drawRunner);
-            handler.postDelayed(drawRunner, 500);
+//            handler.postDelayed(drawRunner, 500);
         }
 
 
+/*
         public void night() {
             //base = //-16776961;
             targetRed = 42;
@@ -187,10 +240,12 @@ public class MyWallpaperService extends WallpaperService {
             targetGreen= 158;
             targetBlue = 205;
         }
+*/
 
         /*
            * Update current color.
            */
+/*
         private void updateCurrentColor() {
 
             if (repeatedApply < 30) {
@@ -217,6 +272,7 @@ public class MyWallpaperService extends WallpaperService {
 
             return currentColor;
         }
+*/
 
     }
 
