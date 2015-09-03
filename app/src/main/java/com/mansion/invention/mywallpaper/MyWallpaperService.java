@@ -51,18 +51,9 @@ public class MyWallpaperService extends WallpaperService {
         private final Handler handler; // = new Handler();
         private Paint paint = new Paint();
         private boolean visible = true;
-        private boolean touchEnabled;
         private int width, top,base, myAlpha;
         int height;
-        private int[] currentColor1;
-        private int[] currentColor2;
-//        private int[] targetColor1;
-//        private int[] targetColor2;
 
-        private int currentRed, currentGreen, currentBlue, targetRed, targetGreen, targetBlue;
-        private boolean reverse;
-        private int repeatedApply;
-        private int testCounter;
 
         private final Runnable drawRunner = new Runnable() {
             @Override
@@ -76,7 +67,6 @@ public class MyWallpaperService extends WallpaperService {
             paint.setAntiAlias(true);
             paint.setColor(myColor);
             paint.setStyle(Paint.Style.STROKE);
-            reverse = false;
             setCurrentColor();
             handler.post(drawRunner);
         }
@@ -120,72 +110,109 @@ public class MyWallpaperService extends WallpaperService {
             super.onSurfaceChanged(holder, format, width, height);
         }
 
-        /*
-           * Current color.
-           */
-        private int getCurrentColor() {
-            return Color.argb(60, currentRed, currentGreen, currentBlue);
-        }
-
 
         public void setCurrentColor() {
             Calendar c = Calendar.getInstance();
             int hourOfDay = Calendar.HOUR_OF_DAY;
+            int minOfDay = Calendar.MINUTE;
 
-            nightMidnight(c);
-            /*if (hourOfDay < 6) midnightDawn(c);
-            else if (hourOfDay < 9) dawnMorning(c);
-            else if (hourOfDay < 12) morningNoon(c)
-            else if (hourOfDay < 15) noonEvening(c);
-            else if (hourOfDay < 18) eveningNight(c);
-            else if (hourOfDay <= 23) nightMidnight(c);
-       */ }
+            if (hourOfDay < 6) midnightDawn(hourOfDay, minOfDay);
+            else if (hourOfDay < 9) dawnMorning(hourOfDay, minOfDay);
+            else if (hourOfDay < 12) morningNoon(hourOfDay, minOfDay);
+            else if (hourOfDay < 15) noonEvening(hourOfDay, minOfDay);
+            else if (hourOfDay < 18) eveningNight(hourOfDay, minOfDay);
+            else if (hourOfDay <= 23) nightMidnight(hourOfDay, minOfDay);
+        }
 
+        final int BLUE_COLOR = Color.argb(60, 83, 93, 176);
+        final int DAWN_BLUE_COLOR = Color.argb(100, 62, 68, 125);
+        final int DAWN_PURPLE_COLOR = Color.argb(100, 101,89, 137);
+        final int NIGHT_PURPLE_COLOR = Color.argb(100, 139,96, 139);
+        final int DAWN_PINK_COLOR = Color.argb(100, 222, 136, 165);
+        final int NOON_PINK_COLOR = Color.argb(100, 238, 111, 178);
+        final int CREAM_COLOR = Color.argb(100,255, 206, 187);
 
-        public void midnightDawn(Calendar c) {
-            //target purple to dark blue
-            int hourOfDay = 5;//c.HOUR_OF_DAY;
-            int minOfDay = 30; //c.MINUTE;
+        public void nightMidnight(int hourOfDay, int minOfDay) {
+            //target dark blue to darkblue , 6pm - midnight
+            int targetTop = BLUE_COLOR;
+            int targetBase = BLUE_COLOR;
+            int targetAlpha = 20;
+
+            int tt = 360;
+            int ct = (hourOfDay - 18)*60 + minOfDay;
+            top = calibrateColor(NIGHT_PURPLE_COLOR, BLUE_COLOR, tt, ct);
+            base = calibrateColor(DAWN_BLUE_COLOR, BLUE_COLOR, tt, ct);
+            myAlpha = 20;
+        }
+
+        public void midnightDawn(int hourOfDay, int minOfDay) {
+            //target purple to dark blue, 00 - 6am
             int tt = 360;
             int ct = hourOfDay*60 + minOfDay;
-            int targetTop = Color.argb(100, 139,96, 139);
-            int targetBase = Color.argb(100, 62, 68, 125);
-            top = targetTop;
-            base = targetBase;
-            myAlpha = 0;
+
+            int targetTop = NIGHT_PURPLE_COLOR;
+            int targetBase = DAWN_BLUE_COLOR;
+
+            top = calibrateColor(BLUE_COLOR, NIGHT_PURPLE_COLOR, tt, ct);
+            base = calibrateColor(BLUE_COLOR, DAWN_BLUE_COLOR, tt, ct);
+            myAlpha = calibrateColor(0, 20, tt, ct);//0;
         }
 
 
-        public void dawnMorning(Calendar c) {
-            top = Color.argb(100, 222, 136, 165);
-            base = Color.argb(100, 101,89, 137);
+        public void dawnMorning(int hourOfDay, int minOfDay) {
+            // target pink to purple   (9am - 12noon)
+            top = DAWN_PINK_COLOR;
+            base = DAWN_PURPLE_COLOR;
+//            myAlpha = 255;
+
+            int tt = 180;
+            int ct = (hourOfDay - 9)*60 + minOfDay;
+            myAlpha = 255*ct/tt;
+            top = calibrateColor(NIGHT_PURPLE_COLOR, DAWN_PINK_COLOR, tt, ct);
+            base = calibrateColor(DAWN_BLUE_COLOR, DAWN_PURPLE_COLOR, tt, ct);
+            myAlpha = calibrateColor(20, 255, tt, ct);
+        }
+
+
+        public void morningNoon(int hourOfDay, int minOfDay) {
+            //target white to pink (12noon - 3pm)
+            int tt = 180;
+            int ct = (hourOfDay - 12)*60 + minOfDay;
+
+            top = CREAM_COLOR;
+            base = NOON_PINK_COLOR;
+            top = calibrateColor(DAWN_PINK_COLOR, CREAM_COLOR, tt, ct);
+            base = calibrateColor(DAWN_PURPLE_COLOR, NOON_PINK_COLOR, tt, ct);
             myAlpha = 255;
-            // target pink to purple
         }
 
-        public void morningNoon(Calendar c) {
-            top = Color.argb(100,255, 206, 187);
-            base = Color.argb(100, 238, 111, 178);
+        public void noonEvening(int hourOfDay, int minOfDay) {
+            //target pink to purple (3pm - 6pm)
+//            dawnMorning(hourOfDay, minOfDay);
+
+            int tt = 180;
+            int ct = (hourOfDay - 15)*60 + minOfDay;
+
+            top = calibrateColor(CREAM_COLOR, DAWN_PINK_COLOR, tt, ct);
+            base = calibrateColor(NOON_PINK_COLOR, DAWN_PURPLE_COLOR, tt, ct);
             myAlpha = 255;
-            //target white to pink
         }
 
-        public void noonEvening(Calendar c) {
-            dawnMorning(c);
-            //target pink to purple
+        public void eveningNight(int hourOfDay, int minOfDay) {
+            //target purple to darkblue. (6pm - midnight)
+//            midnightDawn(hourOfDay, minOfDay);
+
+            int tt = 360;
+            int ct = (hourOfDay - 18)*60 + minOfDay;
+
+            int targetTop = NIGHT_PURPLE_COLOR;
+            int targetBase = DAWN_BLUE_COLOR;
+
+            top = calibrateColor(DAWN_PINK_COLOR, NIGHT_PURPLE_COLOR, tt, ct);
+            base = calibrateColor(DAWN_PURPLE_COLOR, DAWN_BLUE_COLOR, tt, ct);
+            myAlpha = calibrateColor(255, 20, tt, ct);//0;
         }
 
-        public void eveningNight(Calendar c) {
-            midnightDawn(c);
-            //target purple to darkblue.
-        }
-
-        public void nightMidnight(Calendar c) {
-            top = Color.argb(60, 83, 93, 176);
-            base = Color.argb(60, 83, 93, 176);
-            myAlpha = 20;
-            //target dark blue to darkblue.
-        }
 
         private void draw() {
             SurfaceHolder holder = getSurfaceHolder();
@@ -197,14 +224,11 @@ public class MyWallpaperService extends WallpaperService {
 
                     setCurrentColor();
                     int[] colors = {top, base};
-//                    canvas.drawColor(17170447, PorterDuff.Mode.OVERLAY);
                     canvas.drawColor(Color.argb(myAlpha, 255, 255, 255));
-                 GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+                    GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
 
 //                    Log.d("opacity", String.valueOf(canvas.getMatrix()));
                     grad.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                   // grad.setTintMode(PorterDuff.Mode.LIGHTEN);
-//                    grad.setColorFilter(Color.argb(100, 252,243,234), PorterDuff.Mode.OVERLAY);
                     grad.draw(canvas);
 //                    updateCurrentColor();
 
@@ -218,29 +242,6 @@ public class MyWallpaperService extends WallpaperService {
 //            handler.postDelayed(drawRunner, 500);
         }
 
-
-/*
-        public void night() {
-            //base = //-16776961;
-            targetRed = 42;
-            targetGreen = 86;
-            targetBlue = 152;
-        }
-
-        public void noon() {
-            base = -1;
-            targetRed = 255;
-            targetGreen = 182;
-            targetBlue = 153;
-        }
-
-        public void evening() {
-
-            targetRed=192;
-            targetGreen= 158;
-            targetBlue = 205;
-        }
-*/
 
         /*
            * Update current color.
@@ -258,21 +259,20 @@ public class MyWallpaperService extends WallpaperService {
 
             }
         }
-
-        public int calibrateColor(int currentColor, int targetColor) {
-            int increment = 5;
-
-            if (currentColor < targetColor) {
-                if (currentColor + 5 > targetColor) currentColor = targetColor;
-                else currentColor += increment;
-            }else {
-                if (currentColor - 5 < targetColor) currentColor = targetColor;
-                else currentColor -= increment;
-            }
-
-            return currentColor;
-        }
 */
+        //TODO  :  calibrate alpha too!!
+        public int calibrateColor(int previousColor, int targetColor, int tt, int ct) {
+            if (tt - ct < 10) return targetColor;
+
+            if (previousColor == targetColor) {
+                return targetColor;
+            } else if (previousColor < targetColor) {
+                return previousColor + (targetColor - previousColor) /tt*ct;
+            } else {
+                return previousColor - (previousColor - targetColor) /tt*ct;
+            }
+        }
+
 
     }
 
