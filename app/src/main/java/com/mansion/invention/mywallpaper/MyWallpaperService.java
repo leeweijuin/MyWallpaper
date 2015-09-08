@@ -222,7 +222,6 @@ public class MyWallpaperService extends WallpaperService {
 
 
         public int calibrateColor(int previousColor, int targetColor, int currentColor, int tt, int ct) {
-//            if (tt - ct < 10) return targetColor;
             int redDiff = Math.abs(Color.red(targetColor) - Color.red(previousColor));
             int blueDiff = Math.abs(Color.blue(targetColor) - Color.blue(previousColor));
             int greenDiff = Math.abs(Color.green(targetColor) - Color.green(previousColor));
@@ -232,27 +231,25 @@ public class MyWallpaperService extends WallpaperService {
             int newBlue = Color.blue(previousColor);
             int newGreen = Color.green(previousColor);
             int newRed = Color.red(previousColor);
-            //System.out.println("increment " + increment + " ct" + ct + " tt " + tt + " color points " + totalColorPoints + " time fact " + timeFactor);
-
 
             if (Color.red(currentColor) != Color.red(targetColor)) {
                 newRed = calibrateSubColor(Color.red(previousColor), Color.red(targetColor),
                         Color.red(currentColor), increment);
-            } else {
+            } else if (Color.red(currentColor) == Color.red(targetColor)){
                 newRed = Color.red(targetColor);
             }
 
             if (Color.green(currentColor) != Color.green(targetColor) && (increment - redDiff) >= 0) {
                 newGreen = calibrateSubColor(Color.green(previousColor), Color.green(targetColor),
                         Color.green(currentColor), Math.max(0, (increment - redDiff)));
-            } else {
+            } else if (Color.green(currentColor) == Color.green(targetColor)){
                 newGreen = Color.green(targetColor);
             }
 
             if (Color.blue(currentColor) != Color.blue(targetColor) && (increment - redDiff - greenDiff) >= 0) {
                 newBlue = calibrateSubColor(Color.blue(previousColor), Color.blue(targetColor),
                         Color.blue(currentColor), Math.max(0, (increment - redDiff - greenDiff)));
-            } else {
+            } else if (Color.blue(currentColor) == Color.blue(targetColor)){
                 newBlue = Color.blue(targetColor);
             }
              return Color.argb(100, newRed, newGreen, newBlue);
