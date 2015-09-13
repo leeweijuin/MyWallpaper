@@ -124,70 +124,82 @@ public class MyWallpaperService extends WallpaperService {
             int minOfDay = testCount % 60;//Calendar.MINUTE;
 
             System.out.println("hour" + hourOfDay + "min" + minOfDay);
-            if (hourOfDay < 6 || (hourOfDay == 6 && minOfDay == 0)) midnightDawn(hourOfDay, minOfDay);
-            else if (hourOfDay < 9 || (hourOfDay == 9 && minOfDay == 0)) dawnMorning(hourOfDay, minOfDay);
-            else if (hourOfDay < 12 || (hourOfDay == 12 && minOfDay == 0)) morningNoon(hourOfDay, minOfDay);
-            else if (hourOfDay < 18 || (hourOfDay == 18 && minOfDay == 0)) noonEvening(hourOfDay, minOfDay);
-            else if (hourOfDay < 21 || (hourOfDay == 21 && minOfDay == 0)) eveningNight(hourOfDay, minOfDay);
-            else if (hourOfDay < 23 || (hourOfDay == 23 && minOfDay == 0)) nightMidnight(hourOfDay, minOfDay);
+            if (hourOfDay <= 6) midnightDawn(hourOfDay, minOfDay);
+            else if (hourOfDay <= 9) dawnMorning(hourOfDay, minOfDay);
+            else if (hourOfDay <= 12) morningNoon(hourOfDay, minOfDay);
+            else if (hourOfDay <= 15) noonEvening(hourOfDay, minOfDay);
+            else if (hourOfDay <= 18) eveningNight(hourOfDay, minOfDay);
+            else if (hourOfDay <= 23) nightMidnight(hourOfDay, minOfDay);
         }
 
 
         public void nightMidnight(int hourOfDay, int minOfDay) {
-            //target dark blue to darkblue , 9pm - midnight
-            int tt = 180;
-            int ct = (hourOfDay - 18)* 60 + minOfDay;
-            top = calibrateColor(NIGHT_PURPLE_COLOR, BLUE_COLOR, top, tt, ct);
-            base = calibrateColor(DAWN_BLUE_COLOR, BLUE_COLOR, base, tt, ct);
-            myAlpha = 100;
+            //target dark blue to darkblue , 6pm - midnight
+            double tt = 360;
+            double ct = (hourOfDay - 18)* 60 + minOfDay;
+            double timeFactor = ct/tt;
+
+            top = calibrateColor(DAWN_PURPLE_COLOR, BLUE_COLOR, top, timeFactor);
+            base = calibrateColor(DAWN_PURPLE_COLOR, BLUE_COLOR, base, timeFactor);
+            myAlpha = 30;//calibrateColor(0, 100, myAlpha, timeFactor);//100;
         }
+
 
         public void midnightDawn(int hourOfDay, int minOfDay) {
             //target purple to dark blue, 00 - 6am
-            int tt = 360;
-            int ct = hourOfDay * 60 + minOfDay;
+            double tt = 360;
+            double ct = hourOfDay * 60 + minOfDay;
+            double timeFactor = ct/tt;
 
-            top = calibrateColor(BLUE_COLOR, NIGHT_PURPLE_COLOR, top, tt, ct);
-            base = calibrateColor(BLUE_COLOR, DAWN_BLUE_COLOR, base, tt, ct);
+            top = calibrateColor(BLUE_COLOR, NIGHT_PURPLE_COLOR, top, timeFactor);
+            base = calibrateColor(BLUE_COLOR, DAWN_BLUE_COLOR, base, timeFactor);
             myAlpha = 100; //calibrateColor(0, 20, myAlpha,tt, ct);//0;
         }
 
 
         public void dawnMorning(int hourOfDay, int minOfDay) {
             // target pink to purple   (6am - 9am)
-            int tt = 180;
-            int ct = (hourOfDay - 6) * 60 + minOfDay;
-            top = calibrateColor(NIGHT_PURPLE_COLOR, DAWN_PINK_COLOR, top, tt, ct);
-            base = calibrateColor(DAWN_BLUE_COLOR, DAWN_PURPLE_COLOR, base,tt, ct);
-            myAlpha = 70;//calibrateColor(20, 255, myAlpha, tt, ct);
+            double tt = 180;
+            double ct = (hourOfDay - 6)*60 + minOfDay;
+            double timeFactor = ct/tt;
+
+            top = calibrateColor(NIGHT_PURPLE_COLOR, DAWN_PINK_COLOR, top, timeFactor);
+            base = calibrateColor(DAWN_BLUE_COLOR, DAWN_PURPLE_COLOR, base,timeFactor);
+            myAlpha = calibrateColor(100, 0, myAlpha, timeFactor);//calibrateColor(20, 255, myAlpha, tt, ct);
         }
 
 
         public void morningNoon(int hourOfDay, int minOfDay) {
             //target white to pink (9am - 12noon)
-            int tt = 180;
-            int ct = (hourOfDay - 9) * 60 + minOfDay;
-            top = calibrateColor(DAWN_PINK_COLOR, CREAM_COLOR, top, tt, ct);
-            base = calibrateColor(DAWN_PURPLE_COLOR, NOON_PINK_COLOR, base,tt, ct);
+            double tt = 180;
+            double ct = (hourOfDay - 9)*60 + minOfDay;
+            double timeFactor = ct/tt;
+
+            top = calibrateColor(DAWN_PINK_COLOR, CREAM_COLOR, top, timeFactor);
+            base = calibrateColor(DAWN_PURPLE_COLOR, NOON_PINK_COLOR, base,timeFactor);
             myAlpha = 0;
         }
 
         public void noonEvening(int hourOfDay, int minOfDay) {
-            //target pink to purple (12noon - 6pm)
-            int tt = 360;
-            int ct = (hourOfDay - 12) * 60 + minOfDay;
-            top = calibrateColor(CREAM_COLOR, DAWN_PINK_COLOR, top, tt, ct);
-            base = calibrateColor(NOON_PINK_COLOR, DAWN_PURPLE_COLOR, base,tt, ct);
+            //target pink to purple (12noon - 3pm)
+            double tt = 180;
+            double ct = (hourOfDay - 12)*60 + minOfDay;
+            double timeFactor = ct/tt;
+
+            top = calibrateColor(CREAM_COLOR, CREAM_COLOR, top, timeFactor);
+            base = calibrateColor(NOON_PINK_COLOR, DAWN_PINK_COLOR, base,timeFactor);
             myAlpha = 0;
         }
 
         public void eveningNight(int hourOfDay, int minOfDay) {
-            //target purple to darkblue. (6pm - 9pm)
-            int tt = 180;
-            int ct = (hourOfDay - 15) * 60 + minOfDay;
-            top = calibrateColor(DAWN_PINK_COLOR, NOON_PINK_COLOR, top, tt, ct);
-            base = calibrateColor(DAWN_PURPLE_COLOR, DAWN_BLUE_COLOR, base, tt, ct);
-            myAlpha = 0; //100; //calibrateColor(255, 20, myAlpha, tt, ct);//0;
+            //target purple to darkblue. (3pm - 6pm)
+            double tt = 180;
+            double ct = (hourOfDay - 15)*60 + minOfDay;
+            double timeFactor = ct/tt;
+
+            top = calibrateColor(CREAM_COLOR, NOON_PINK_COLOR, top, timeFactor);
+            base = calibrateColor(DAWN_PINK_COLOR, DAWN_PURPLE_COLOR, base, timeFactor);
+            myAlpha = 0;//calibrateColor(, 0, myAlpha, tt, ct);//0;
         }
 
 
@@ -202,13 +214,9 @@ public class MyWallpaperService extends WallpaperService {
                     canvas.drawColor(Color.argb(myAlpha, 0, 0, 0));
                     setCurrentColor();
                     int[] colors = {top, base};
-
                     GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
-
-//                    Log.d("opacity", String.valueOf(canvas.getMatrix()));
                     grad.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
                     grad.draw(canvas);
-//                    updateCurrentColor();
 
                 }
             } finally {
@@ -221,16 +229,15 @@ public class MyWallpaperService extends WallpaperService {
         }
 
 
-        public int calibrateColor(int previousColor, int targetColor, int currentColor, int tt, int ct) {
+        public int calibrateColor(int previousColor, int targetColor, int currentColor, double timeFactor) {
             int redDiff = Math.abs(Color.red(targetColor) - Color.red(previousColor));
             int blueDiff = Math.abs(Color.blue(targetColor) - Color.blue(previousColor));
             int greenDiff = Math.abs(Color.green(targetColor) - Color.green(previousColor));
-            int totalColorPoints = (redDiff + blueDiff + greenDiff);
-            double timeFactor = ((double)ct/(double)tt);
-            int increment =  (int)Math.floor(timeFactor * totalColorPoints);
             int newBlue = Color.blue(previousColor);
             int newGreen = Color.green(previousColor);
             int newRed = Color.red(previousColor);
+
+            int increment =  (int)Math.floor(timeFactor * (redDiff + blueDiff + greenDiff));
 
             if (Color.red(currentColor) != Color.red(targetColor)) {
                 newRed = calibrateSubColor(Color.red(previousColor), Color.red(targetColor),
@@ -260,7 +267,6 @@ public class MyWallpaperService extends WallpaperService {
         public int calibrateSubColor(int previousColor, int targetColor, int currentColor, int factor) {
             int newColor = previousColor;
             int increment = factor;
-
 
             if (previousColor < targetColor) {
                 if (previousColor + increment < targetColor) newColor = previousColor + increment;
