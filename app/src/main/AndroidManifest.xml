@@ -11,6 +11,13 @@
         android:required="true" >
     </uses-feature>
 
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -19,8 +26,8 @@
         android:theme="@style/AppTheme" >
         <service
             android:name=".MyWallpaperService"
-            android:label="Wallpaper Example"
             android:enabled="true"
+            android:label="Wallpaper Example"
             android:permission="android.permission.BIND_WALLPAPER" >
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" >
@@ -39,10 +46,14 @@
             android:theme="@android:style/Theme.Light.WallpaperSettings" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".MyPreferenceActivity"
+            android:label="@string/title_activity_my_preference" >
+        </activity>
     </application>
 
 </manifest>

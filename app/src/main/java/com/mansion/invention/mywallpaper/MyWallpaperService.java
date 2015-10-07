@@ -130,6 +130,8 @@ public class MyWallpaperService extends WallpaperService {
             else if (hourOfDay <= 15) noonEvening(hourOfDay, minOfDay);
             else if (hourOfDay <= 18) eveningNight(hourOfDay, minOfDay);
             else if (hourOfDay <= 23) nightMidnight(hourOfDay, minOfDay);
+
+
         }
 
 
@@ -202,6 +204,13 @@ public class MyWallpaperService extends WallpaperService {
             myAlpha = 0;//calibrateColor(, 0, myAlpha, tt, ct);//0;
         }
 
+        public int getHour() {
+            return testCount/60;
+        }
+
+        public int getMinute() {
+            return testCount % 60;
+        }
 
         private void draw() {
             SurfaceHolder holder = getSurfaceHolder();
@@ -214,6 +223,7 @@ public class MyWallpaperService extends WallpaperService {
                     canvas.drawColor(Color.argb(myAlpha, 0, 0, 0));
                     setCurrentColor();
                     int[] colors = {top, base};
+                    //int[] colors = gb.getCurrentGradientColor(getHour, getMin);
                     GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
                     grad.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
                     grad.draw(canvas);
