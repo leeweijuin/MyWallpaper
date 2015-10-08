@@ -1,4 +1,4 @@
-package com.mansion.invention.mywallpaper;
+package temp;
 
 import android.graphics.Color;
 
