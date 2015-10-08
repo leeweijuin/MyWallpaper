@@ -1,15 +1,15 @@
-package temp;
+package com.mansion.invention.mywallpaper;
 
 import android.graphics.Color;
 
 /**
  * Created by weiwei on 24/09/2015.
  */
-public abstract class gradientBackground {
+public abstract class GradientBackground {
 
     public int width, top, base, myAlpha, testCount;
 
-    public gradientBackground() {
+    public GradientBackground() {
     }
 
     public int[] getCurrentGradientColor(int hourOfDay, int minOfDay) {

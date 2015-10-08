@@ -1,9 +1,9 @@
-package temp;
+package com.mansion.invention.mywallpaper;
 
 import android.graphics.Color;
 
 
-public class butterflyGradientBackground extends gradientBackground {
+public class ButterflyGradientBackground extends GradientBackground {
 
     final int BLUE_COLOR = Color.argb(60, 83, 93, 176);
     final int DAWN_BLUE_COLOR = Color.argb(100, 62, 68, 125);
@@ -14,7 +14,7 @@ public class butterflyGradientBackground extends gradientBackground {
     final int CREAM_COLOR = Color.argb(100, 255, 206, 187);
 
 
-    public butterflyGradientBackground() {
+    public ButterflyGradientBackground() {
     }
 
 
