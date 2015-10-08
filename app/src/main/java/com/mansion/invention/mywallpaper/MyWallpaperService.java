@@ -10,6 +10,9 @@ import android.view.SurfaceHolder;
 
 import java.util.Calendar;
 
+import temp.butterflyGradientBackground;
+import temp.gradientBackground;
+
 public class MyWallpaperService extends WallpaperService {
     public int myColor = Color.WHITE;
 
