@@ -2,11 +2,7 @@ package com.mansion.invention.mywallpaper;
 
 import android.graphics.Color;
 
-import java.util.Calendar;
 
-/*
-
- */
 public class butterflyGradientBackground extends gradientBackground {
 
     final int BLUE_COLOR = Color.argb(60, 83, 93, 176);
@@ -22,25 +18,7 @@ public class butterflyGradientBackground extends gradientBackground {
     }
 
 
-    public int[] getCurrentGradientColor(int hourOfDay, int minOfDay) {
-        Calendar c = Calendar.getInstance();
-
-        System.out.println("hour" + hourOfDay + "min" + minOfDay);
-        if (hourOfDay <= 6) midnightDawn(hourOfDay, minOfDay);
-        else if (hourOfDay <= 9) dawnMorning(hourOfDay, minOfDay);
-        else if (hourOfDay <= 12) morningNoon(hourOfDay, minOfDay);
-        else if (hourOfDay <= 15) noonEvening(hourOfDay, minOfDay);
-        else if (hourOfDay <= 18) eveningNight(hourOfDay, minOfDay);
-        else if (hourOfDay <= 23) nightMidnight(hourOfDay, minOfDay);
-        int[] gc = {top, base};
-
-        return gc;
-        //setCurrentColor
-        //return color array.
-    }
-
-
-    public void getCurrentAlpha() {
+     public void getCurrentAlpha() {
         //night midnight  return 30;
 
     }

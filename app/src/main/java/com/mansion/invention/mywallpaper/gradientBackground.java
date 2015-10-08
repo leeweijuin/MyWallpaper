@@ -12,6 +12,42 @@ public abstract class gradientBackground {
     public gradientBackground() {
     }
 
+    public int[] getCurrentGradientColor(int hourOfDay, int minOfDay) {
+//        Calendar c = Calendar.getInstance();
+
+        System.out.println("hour" + hourOfDay + "min" + minOfDay);
+        if (hourOfDay <= 6) midnightDawn(hourOfDay, minOfDay);
+        else if (hourOfDay <= 9) dawnMorning(hourOfDay, minOfDay);
+        else if (hourOfDay <= 12) morningNoon(hourOfDay, minOfDay);
+        else if (hourOfDay <= 15) noonEvening(hourOfDay, minOfDay);
+        else if (hourOfDay <= 18) eveningNight(hourOfDay, minOfDay);
+        else if (hourOfDay <= 23) nightMidnight(hourOfDay, minOfDay);
+        int[] gc = {top, base};
+
+        return gc;
+    }
+
+
+    public int getAlpha(int hourOfDay, int minOfDay) {
+
+        if (hourOfDay <= 6) {
+            myAlpha= 100;
+        } else if (hourOfDay <= 9) {
+            double tt = 180;
+            double ct = (hourOfDay - 6)*60 + minOfDay;
+            double timeFactor = ct/tt;
+            myAlpha = calibrateColor(100, 0, myAlpha, timeFactor);
+        } else if (hourOfDay <= 12) {
+            myAlpha = 0;
+        } else if (hourOfDay <= 15) {
+            myAlpha = 0;
+        } else if (hourOfDay <= 18) {
+            myAlpha = 0;
+        } else if (hourOfDay <= 23) {
+            myAlpha = 30;
+        }
+        return myAlpha;
+    }
 
     public void nightMidnight(int hourOfDay, int minOfDay) {
 
