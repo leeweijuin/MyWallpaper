@@ -18,12 +18,6 @@ public class ButterflyGradientBackground extends GradientBackground {
     }
 
 
-     public void getCurrentAlpha() {
-        //night midnight  return 30;
-
-    }
-
-
     public void midnightDawn(int hourOfDay, int minOfDay)  {
         //target purple to dark blue, 00 - 6am
         double tt = 360;
@@ -32,7 +26,6 @@ public class ButterflyGradientBackground extends GradientBackground {
 
         top = calibrateColor(BLUE_COLOR, NIGHT_PURPLE_COLOR, top, timeFactor);
         base = calibrateColor(BLUE_COLOR, DAWN_BLUE_COLOR, base, timeFactor);
-//        myAlpha = 100; //calibrateColor(0, 20, myAlpha,tt, ct);//0;
     }
 
 
@@ -44,7 +37,6 @@ public class ButterflyGradientBackground extends GradientBackground {
 
         top = calibrateColor(DAWN_PURPLE_COLOR, BLUE_COLOR, top, timeFactor);
         base = calibrateColor(DAWN_PURPLE_COLOR, BLUE_COLOR, base, timeFactor);
-      //  myAlpha = 30;//calibrateColor(0, 100, myAlpha, timeFactor);//100;
     }
 
 
@@ -57,7 +49,6 @@ public class ButterflyGradientBackground extends GradientBackground {
 
         top = calibrateColor(NIGHT_PURPLE_COLOR, DAWN_PINK_COLOR, top, timeFactor);
         base = calibrateColor(DAWN_BLUE_COLOR, DAWN_PURPLE_COLOR, base,timeFactor);
-//        myAlpha = calibrateColor(100, 0, myAlpha, timeFactor);//calibrateColor(20, 255, myAlpha, tt, ct);
     }
 
     public void morningNoon(int hourOfDay, int minOfDay) {
@@ -68,7 +59,6 @@ public class ButterflyGradientBackground extends GradientBackground {
 
         top = calibrateColor(DAWN_PINK_COLOR, CREAM_COLOR, top, timeFactor);
         base = calibrateColor(DAWN_PURPLE_COLOR, NOON_PINK_COLOR, base,timeFactor);
-//        myAlpha = 0;
     }
 
     public void noonEvening(int hourOfDay, int minOfDay) {
@@ -79,7 +69,6 @@ public class ButterflyGradientBackground extends GradientBackground {
 
         top = calibrateColor(CREAM_COLOR, CREAM_COLOR, top, timeFactor);
         base = calibrateColor(NOON_PINK_COLOR, DAWN_PINK_COLOR, base,timeFactor);
-//        myAlpha = 0;
     }
 
     public void eveningNight(int hourOfDay, int minOfDay) {
@@ -90,7 +79,6 @@ public class ButterflyGradientBackground extends GradientBackground {
 
         top = calibrateColor(CREAM_COLOR, NOON_PINK_COLOR, top, timeFactor);
         base = calibrateColor(DAWN_PINK_COLOR, DAWN_PURPLE_COLOR, base, timeFactor);
-//        myAlpha = 0;//calibrateColor(, 0, myAlpha, tt, ct);//0;
     }
 
 }

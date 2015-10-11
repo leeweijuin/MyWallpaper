@@ -33,7 +33,7 @@ public abstract class GradientBackground {
         if (hourOfDay <= 6) {
             myAlpha= 100;
         } else if (hourOfDay <= 9) {
-            double tt = 180;
+            double tt = 180;   //calibrateColor(100, 0, myAlpha, timeFactor);
             double ct = (hourOfDay - 6)*60 + minOfDay;
             double timeFactor = ct/tt;
             myAlpha = calibrateColor(100, 0, myAlpha, timeFactor);
