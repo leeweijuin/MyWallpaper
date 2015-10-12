@@ -7,13 +7,20 @@ import android.graphics.Color;
  */
 public abstract class GradientBackground {
 
-    public int width, top, base, myAlpha, testCount;
+    public int top, base, myAlpha;
 
+
+    /*
+    * Constructor.
+    */
     public GradientBackground() {
     }
 
+
+    /*
+    * Get current gradient color.
+    */
     public int[] getCurrentGradientColor(int hourOfDay, int minOfDay) {
-//        Calendar c = Calendar.getInstance();
 
         System.out.println("hour" + hourOfDay + "min" + minOfDay);
         if (hourOfDay <= 6) midnightDawn(hourOfDay, minOfDay);
@@ -28,6 +35,9 @@ public abstract class GradientBackground {
     }
 
 
+    /*
+    * Get alpha.
+    */
     public int getAlpha(int hourOfDay, int minOfDay) {
 
         if (hourOfDay <= 6) {
@@ -49,31 +59,56 @@ public abstract class GradientBackground {
         return myAlpha;
     }
 
+
+    /*
+    * Night midnight.
+    */
     public void nightMidnight(int hourOfDay, int minOfDay) {
 
     }
 
 
+    /*
+    * Midnight dawn.
+    */
     public void midnightDawn(int hourOfDay, int minOfDay)  {
 
     }
 
+    /*
+    * Dawn morning.
+    */
     public void dawnMorning(int hourOfDay, int minOfDay) {
 
     }
 
+
+    /*
+    * Morning noon.
+    */
     public void morningNoon(int hourOfDay, int minOfDay) {
     }
 
+
+    /*
+    * Noon evening.
+    */
     public void noonEvening(int hourOfDay, int minOfDay) {
 
     }
 
+
+    /*
+    * Evening night.
+    */
     public void eveningNight(int hourOfDay, int minOfDay) {
 
     }
 
 
+    /*
+    * Calibrate color.
+    */
     public int calibrateColor(int previousColor, int targetColor, int currentColor, double timeFactor) {
         int redDiff = Math.abs(Color.red(targetColor) - Color.red(previousColor));
         int blueDiff = Math.abs(Color.blue(targetColor) - Color.blue(previousColor));
@@ -110,12 +145,7 @@ public abstract class GradientBackground {
 
 
     /**
-     *
-     * @param previousColor
-     * @param targetColor
-     * @param currentColor
-     * @param factor
-     * @return
+     * Calibrate sub color.
      */
     public int calibrateSubColor(int previousColor, int targetColor, int currentColor, int factor) {
         int newColor = previousColor;

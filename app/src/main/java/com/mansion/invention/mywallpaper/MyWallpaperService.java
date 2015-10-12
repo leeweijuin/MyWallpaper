@@ -33,6 +33,9 @@ public class MyWallpaperService extends WallpaperService {
         return new MyWallpaperEngine();
     }
 
+    /*
+    * My wallpaper engine.
+    */
     private class MyWallpaperEngine extends Engine {
         private final Handler handler; // = new Handler();
         private Paint paint = new Paint();
@@ -42,6 +45,9 @@ public class MyWallpaperService extends WallpaperService {
         int height;
 
 
+        /*
+        * Draw runner.
+        */
         private final Runnable drawRunner = new Runnable() {
             @Override
             public void run() {
@@ -49,6 +55,10 @@ public class MyWallpaperService extends WallpaperService {
             }
         };
 
+
+        /*
+        * Constructor.
+        */
         public MyWallpaperEngine() {
             handler = new Handler();
             initBackgroundType();
@@ -59,11 +69,17 @@ public class MyWallpaperService extends WallpaperService {
         }
 
 
+        /*
+        * Init background type.
+        */
         public void initBackgroundType() {
             gb = new ButterflyGradientBackground();
         }
 
 
+        /*
+        * On create.
+        */
         public void onCreate(SurfaceHolder surfaceHolder) {
             super.onCreate(surfaceHolder);
         }
@@ -79,6 +95,7 @@ public class MyWallpaperService extends WallpaperService {
             }
         }
 
+
         @Override
         public void onSurfaceDestroyed(SurfaceHolder holder) {
             super.onSurfaceDestroyed(holder);
@@ -86,12 +103,14 @@ public class MyWallpaperService extends WallpaperService {
             handler.removeCallbacks(drawRunner);
         }
 
+
         @Override
         public void onDestroy() {
             super.onDestroy();
             this.visible = false;
             handler.removeCallbacks(drawRunner);
         }
+
 
         @Override
         public void onSurfaceChanged(SurfaceHolder holder, int format,
@@ -101,16 +120,27 @@ public class MyWallpaperService extends WallpaperService {
             super.onSurfaceChanged(holder, format, width, height);
         }
 
+
+        /*
+        * Get hour.
+        */
         public int getHour() {
             Calendar c = Calendar.getInstance();
             return testCount/60;
         }
 
+
+        /*
+        * Get minute.
+        */
         public int getMinute() {
             return testCount % 60;
         }
 
 
+        /*
+        * Draw.
+        */
         private void draw() {
             SurfaceHolder holder = getSurfaceHolder();
             Canvas canvas = null;
